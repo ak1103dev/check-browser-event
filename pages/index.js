@@ -1,6 +1,16 @@
 import React, { Component } from 'react'
 import Link from 'next/link'
 
+const log = message =>
+  fetch('http://localhost:8080', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ message })
+  })
+
 export default class Index extends Component {
   constructor (props) {
     super(props)
@@ -11,15 +21,19 @@ export default class Index extends Component {
   }
   componentDidMount () {
     console.log('did mount')
+    log('did mount')
     window.onbeforeunload = function (e) {
+      log('before unload')
       var dialogText = 'Dialog text here'
       e.returnValue = dialogText
       return dialogText
     }
     window.onfocus = function () {
+      log('on focus')
       console.log('focus')
     }
     window.onblur = function () {
+      log('on blur')
       console.log('blur')
     }
   }
@@ -37,14 +51,8 @@ export default class Index extends Component {
   }
 
   componentWillUnmount () {
-    fetch('http://localhost:8080', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ message: 'will unmount index' })
-    })
+    log('will unmount')
+    window.onbeforeunload = undefined
     console.log('will unmount')
   }
 }
